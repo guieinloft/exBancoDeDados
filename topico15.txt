@@ -1,0 +1,48 @@
+create database if not exists Topico15;
+
+create table Juiz(
+	idJuiz int not null,
+    nome varchar(50) not null,
+    pais varchar(50) not null,
+    primary key (idJuiz)
+);
+
+create table Jogador(
+	idJogador int not null,
+    nome varchar(50) not null,
+    time varchar(50) not null,
+    primary key (idJogador)
+);
+
+create table TipoCartao(
+	dataC date not null,
+    tempoC time not null,
+    idJogador int not null,
+    tipoC varchar(20),
+    idJuiz int,
+    primary key (dataC, tempoC, idJogador),
+    foreign key (idJogador) references Jogador(idJogador),
+    foreign key (idJuiz) references Juiz(idJuiz)
+);
+
+insert into Juiz(idJuiz, nome, pais) values (
+	(1, "Meira Ricci", "Brasil"),
+    (2, "Óscar Ruiz", "Colômbia"),
+    (3, "Amarilla", "Paraguai")
+);
+
+insert into Jogador(idJogador, nome, pais) values (
+	(1, "Higuita", "Colômbia"),
+    (2, "Maradona", "Argentina"),
+    (3, "Messi", "Argentina"),
+    (4, "F. Melo", "Brasil")
+);
+
+insert into TipoCartao(dataC, tempoC, idJogador, tipoC, idJuiz) values (
+	(2014-06-15, 002300, 1, "amarelo", 1),
+    (2014-06-15, 001100, 2, "vermelho", 2),
+    (2014-06-16, 006000, 3, "amarelo", 3),
+    (2014-06-16, 001400, 4, "amarelo", 2),
+    (2014-06-16, 002400, 4, "vermelho", 2),
+    (2014-06-16, 002300, 3, "amarelo", 3)
+);
