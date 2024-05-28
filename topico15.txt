@@ -1,4 +1,5 @@
 create database if not exists Topico15;
+use Topico15;
 
 create table Juiz(
 	idJuiz int not null,
@@ -15,34 +16,43 @@ create table Jogador(
 );
 
 create table TipoCartao(
-	dataC date not null,
-    tempoC time not null,
+	dataCartao date not null,
+    tempoCartao time not null,
     idJogador int not null,
     tipoC varchar(20),
     idJuiz int,
-    primary key (dataC, tempoC, idJogador),
+    primary key (dataCartao, tempoCartao, idJogador),
     foreign key (idJogador) references Jogador(idJogador),
     foreign key (idJuiz) references Juiz(idJuiz)
 );
 
-insert into Juiz(idJuiz, nome, pais) values (
+insert into Juiz(idJuiz, nome, pais) values
 	(1, "Meira Ricci", "Brasil"),
     (2, "Óscar Ruiz", "Colômbia"),
-    (3, "Amarilla", "Paraguai")
-);
+    (3, "Amarilla", "Paraguai");
 
-insert into Jogador(idJogador, nome, pais) values (
+insert into Jogador(idJogador, nome, time) values
 	(1, "Higuita", "Colômbia"),
     (2, "Maradona", "Argentina"),
     (3, "Messi", "Argentina"),
-    (4, "F. Melo", "Brasil")
-);
+    (4, "F. Melo", "Brasil");
 
-insert into TipoCartao(dataC, tempoC, idJogador, tipoC, idJuiz) values (
-	(2014-06-15, 002300, 1, "amarelo", 1),
-    (2014-06-15, 001100, 2, "vermelho", 2),
-    (2014-06-16, 006000, 3, "amarelo", 3),
-    (2014-06-16, 001400, 4, "amarelo", 2),
-    (2014-06-16, 002400, 4, "vermelho", 2),
-    (2014-06-16, 002300, 3, "amarelo", 3)
-);
+insert into TipoCartao(dataCartao, tempoCartao, idJogador, tipoC, idJuiz) values
+	("2014-06-15", "23:00", 1, "amarelo", 1),
+    ("2014-06-15", "11:00", 2, "vermelho", 2),
+    ("2014-06-16", "60:00", 3, "amarelo", 3),
+    ("2014-06-16", "14:00", 4, "amarelo", 2),
+    ("2014-06-16", "24:00", 4, "vermelho", 2),
+    ("2014-06-16", "23:00", 3, "amarelo", 3);
+
+select
+    TipoCartao.dataCartao,
+    Jogador.nome,
+    Jogador.time,
+    TipoCartao.tempoCartao,
+    TipoCartao.tipoC,
+    Juiz.nome,
+    Juiz.pais
+from TipoCartao
+join Jogador on TipoCartao.idJogador = Jogador.idJogador
+join Juiz on TipoCartao.idJuiz = Juiz.idJuiz;
