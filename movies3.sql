@@ -18,9 +18,9 @@ having qtd > 1;
 select f.titulo, avg(a.altura)
 from filme f natural inner join elenco e natural inner join ator a
 where altura is not null
-group by f.titulo;
+group by f.idFilme;
 -- 5. Exibir o país de origem e a quantidade de filmes que contarem com artistas daquele país. 
-select a.pais, count(*)
+select a.pais, count(distinct f.idFilme)
 from ator a natural inner join elenco e natural inner join filme f
 group by a.pais;
 -- 6. Exibir a quantidade de filmes por nacionalidade e sexo dos artistas envolvidos.
@@ -29,8 +29,8 @@ select a.pais, a.sexo, count(*)
 from ator a natural inner join elenco e natural inner join filme f
 group by a.pais, a.sexo;
 -- 7. Para cada filme, retornar o título, o diretor e a quantidade de artistas.  
-select f.titulo, d.nome, count(*)
-from filme f natural join elenco e natural join ator a
+select f.titulo, d.nome, count(a.nome)
+from filme f natural inner join elenco e natural inner join ator a
 inner join diretor d on d.idDiretor = f.idDiretor
 group by f.titulo, d.nome;
 -- 8. Retornar nome do artista e título dos filmes estrelados por artistas cujo nome comece com 'Tom'.
@@ -40,29 +40,46 @@ where a.nome like "Tom %";
 -- 9. Mostrar título, ano e os artistas de cada filme produzido entre 2008 e 2009. 
 -- Filmes sem artistas registrados também devem ser exibidos.
 select f.titulo, f.ano, a.nome
-from filme f natural join elenco e natural join ator a
+from filme f natural left join elenco e natural left join ator a
 where f.ano between 2008 and 2009;
 -- 10. Mostrar título de filmes e a contagem de artistas. 
 -- Filmes sem artistas devem receber a contagem zero.
 select f.titulo, count(a.nome)
-from filme f natural join elenco e natural join ator a
+from filme f natural left join elenco e natural left join ator a
 group by f.titulo;
 -- Os próximos exercícios não serão avaliados, mas podem ser entregues junto com os demais.
 
 -- 11. Retornar o título do filme, o nome do diretor e de seus artistas.
-
+select f.titulo, d.nome, a.nome
+from filme f natural inner join elenco e natural inner join ator a
+inner join diretor d on d.idDiretor = f.idDiretor
+order by f.titulo asc;
 -- 12. Retornar o título do filme, o nome do diretor e de seus artistas.
 -- Filmes sem artistas também devem ser retornados (no caso, Avatar).
-
+select f.titulo, d.nome, a.nome
+from filme f natural left join elenco e natural left join ator a
+inner join diretor d on d.idDiretor = f.idDiretor
+order by f.titulo asc;
 -- 13. Retornar o título do filme, o nome do diretor.
 -- Apenas filmes sem artistas devem ser retornados (no caso, Avatar).
-
+select f.titulo, d.nome
+from filme f natural join diretor d
+left join elenco e on f.idFilme = e.idFilme
+where e.idFilme is null;
 -- 14. Exibir duas colunas. Uma contendo o título do filme e outra exibindo a sua sequência.
 -- Filmes sem sequência não precisam ser retornados.
-
+select f.titulo anterior, seq.titulo sequencia
+from filme f
+inner join filme seq on f.idFilme = seq.idFilmeAnterior;
 -- 15. Exibir duas colunas. Uma contendo o título do filme e outra exibindo a sua sequência.
 -- Filmes sem sequência também precisam ser retornados.
-
+select f.titulo anterior, seq.titulo sequencia
+from filme f
+left join filme seq on f.idFilme = seq.idFilmeAnterior;
 -- 16. Exibir o título do filme e o título da sua sequência. 
 -- O diretor de cada filme deve ser exibido.
 -- Filmes sem sequência também precisam ser retornados.
+select f.titulo anterior, d.nome diretor, seq.titulo sequencia
+from filme f
+left join filme seq on f.idFilme = seq.idFilmeAnterior
+inner join diretor d on f.idDiretor = d.idDiretor;
