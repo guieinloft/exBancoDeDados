@@ -49,16 +49,32 @@ union
 -- Os próximos exercícios não serão avaliados, mas podem ser entregues junto com os demais.
 
 -- 11. Exibir título de filmes que tiveram participantes tanto do sexo masculino quanto feminino.
-
+select titulo from filme where idFilme in
+(select idFilme from elenco where idAtor in
+(select idAtor from ator where sexo = "F"))
+and idFilme in
+(select idFilme from elenco where idAtor in
+(select idAtor from ator where sexo = "M"));
 -- 12. Exibir filmes que não tiveram participantes tanto do sexo masculino quanto feminino.
-
+select titulo from filme where idFilme not in
+(select idFilme from elenco where idAtor in
+(select idAtor from ator where sexo = "F"))
+and idFilme not in
+(select idFilme from elenco where idAtor in
+(select idAtor from ator where sexo = "M"));
 -- 13. Para cada filme exibir três colunas contendo o título, a quantidade de artistas do sexo feminino e a quantidade de artistas do sexo masculino.
-
+select filme.titulo,
+(select count(*) from elenco where filme.idFilme = elenco.idFilme and idAtor in
+(select idAtor from ator where sexo = "F")) fem,
+(select count(*) from elenco where filme.idFilme = elenco.idFilme and idAtor in
+(select idAtor from ator where sexo = "M")) masc
+from filme;
 -- 14. Para cada diretor exibir o seu nome, a quantidade de 
 -- artistas do sexo feminino e a quantidade de artistas do sexo masculino com os quais ele já trabalhou.
-
+select diretor.nome,
+(select count(*) from filme where diretor.idFilme
 -- 15. Exibir o nome do diretor que mais trabalhou com artistas do sexo feminino. 
 -- Mostrar a quantidade de artistas respectiva.
 
 -- 16. Retorne quantos filmes estão catalogados considerando a primeira letra do título.
--- O resultado deve exibir a contagem para as letras de A e F, mesmo que a contage seja zero. 
+-- O resultado deve exibir a contagem para as letras de A e F, mesmo que a contage seja zero.
